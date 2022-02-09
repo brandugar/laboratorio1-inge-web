@@ -21,10 +21,6 @@ export class IssueController {
     //TODO: Implementacion
   }
 
-  static Delete(req, res, next) {
-    //TODO: Implementacion
-  }
-
   static Update(req, res, next) {
     //TODO: Implementacion
   }
