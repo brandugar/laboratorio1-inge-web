@@ -11,7 +11,7 @@ datasource db {
 }
 
 model IssueComment {
-  id        String @unique
+  id        String @id @default(cuid())
   comment   String
   userId    String
   createdBy User   @relation("UserComments", fields: [userId], references: [id])
@@ -20,18 +20,18 @@ model IssueComment {
 }
 
 model Project {
-  id                 String     @unique
+  id                 String     @id @default(cuid())
   name               String
   description        String
   clientEnterpriseId String
   clientEnterprise   Enterprise @relation(fields: [clientEnterpriseId], references: [id])
-  developers         User[]     @relation("ProjectUsers")
-  clients            User[]     @relation("ProjectClients")
+  developers         User[]
+  clients            User[]     @relation("Clients")
   Issue              Issue[]    @relation("ProjectIssue")
 }
 
 model Enterprise {
-  id       String    @unique
+  id       String    @id @default(cuid())
   name     String
   projects Project[]
   users    User[]
@@ -44,16 +44,14 @@ enum Enum_Role {
 }
 
 model User {
-  id           String         @unique
+  id           String         @id @default(cuid())
   email        String         @unique
   enterprise   Enterprise     @relation(fields: [id], references: [id])
   role         Enum_Role
   commentId    String
   comments     IssueComment[] @relation("UserComments")
-  projectDevId String
-  projectCltId String
-  projectDev   Project        @relation("ProjectUsers", fields: [projectDevId], references: [id])
-  projectClt   Project        @relation("ProjectClients", fields: [projectCltId], references: [id])
+  projectDev   Project[]
+  projectClt   Project[]      @relation("Clients")
   Issue        Issue[]        @relation("UserIssue")
 }
 
