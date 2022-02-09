@@ -6,13 +6,33 @@ const { PrismaClient } = pkg;
 const prisma = new PrismaClient();
 
 export class IssueCommentController {
-  static async GetAll(res) {
+  static async GetAll(req, res) {
     const issueComments = await prisma.issueComment.findMany({});
     return res.json({ issues: issueComments });
   }
 
-  static Get(req, res) {
-    //TODO: Implementacion
+  static async Get(req, res) {
+    const id = String(req.params.id);
+
+    if (!id) {
+      return res
+        .status(400)
+        .json(new DefaultResponse(400, "Parametro Id requerido", null));
+    } else {
+      const comment = await prisma.issueComment.findUnique({
+        where: {
+          id: id,
+        },
+      });
+
+      if (!comment) {
+        return res
+          .status(400)
+          .json(new DefaultResponse(400, "Registro no encontrado", comment));
+      }
+
+      return res.status(200).json(new DefaultResponse(200, "Ok", comment));
+    }
   }
 
   static async Store(req, res) {
@@ -43,7 +63,26 @@ export class IssueCommentController {
     }
   }
 
-  static Update(req, res) {
-    //TODO: Implementacion
+  static async Update(req, res) {
+    const id = String(req.params.id);
+
+    if (!id) {
+      return res
+        .status(400)
+        .json(new DefaultResponse(400, "Parametro Id requerido", null));
+    } else {
+      try {
+        const comment = req.body.issueComment;
+        const updateIssueComment = await prisma.issueComment.update({
+          where: {
+            id: id,
+          },
+          data: comment,
+        });
+        return res.json(new DefaultResponse(200, "Ok", updateIssueComment));
+      } catch (error) {
+        return res.json(new DefaultResponse(500, error.message, error));
+      }
+    }
   }
 }

@@ -5,7 +5,7 @@ const { PrismaClient } = pkg;
 const prisma = new PrismaClient();
 
 export class UserController {
-  static async GetAll(res) {
+  static async GetAll(req, res) {
     const users = await prisma.user.findMany({});
     return res.json({ users: users });
   }
@@ -34,11 +34,11 @@ export class UserController {
     }
   }
 
-  static Store(req, res, next) {
+  static Store(req, res) {
     //TODO: Implementacion
   }
 
-  static Update(req, res, next) {
+  static Update(req, res) {
     //TODO: Implementacion
   }
 }

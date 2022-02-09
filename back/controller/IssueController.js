@@ -6,17 +6,36 @@ const { PrismaClient } = pkg;
 const prisma = new PrismaClient();
 
 export class IssueController {
-  static async GetAll(res) {
+  static async GetAll(req, res) {
     const issues = await prisma.issue.findMany({});
     return res.json({ issues: issues });
   }
 
-  static Get(req, res) {
-    //TODO: Implementacion
+  static async  Get(req, res) {
+    const id = String(req.params.id);
+
+    if (!id) {
+      return res
+        .status(400)
+        .json(new DefaultResponse(400, "Parametro Id requerido", null));
+    } else {
+      const issue = await prisma.issue.findUnique({
+        where: {
+          id: id,
+        },
+      });
+
+      if (!issue) {
+        return res
+          .status(400)
+          .json(new DefaultResponse(400, "Registro no encontrado", issue));
+      }
+
+      return res.status(200).json(new DefaultResponse(200, "Ok", issue));
+    }
   }
 
   static async Store(req, res) {
-
     /* Request example
 {
     "issue": {
@@ -50,7 +69,7 @@ export class IssueController {
           userId: issue.userId,
           dueDate: new Date(issue.dueDate),
           closeDate: new Date(issue.closeDate),
-          projectId: issue.projectId
+          projectId: issue.projectId,
         },
       });
 
@@ -60,7 +79,37 @@ export class IssueController {
     }
   }
 
-  static Update(req, res) {
-    //TODO: Implementacion
+  static async Update(req, res) {
+    const id = String(req.params.id);
+
+    console.log(id)
+    if (!id) {
+      return res
+        .status(400)
+        .json(new DefaultResponse(400, "Parametro Id requerido", null));
+    } else {
+      try {
+        const issue = req.body.issue;
+        const updateIssue = await prisma.issue.update({
+          where: {
+            id: id,
+          },
+          data: {
+            description: issue.description,
+            category: issue.category,
+            priority: issue.priority,
+            status: issue.status,
+            hourEstimate: issue.hourEstimate,
+            userId: issue.userId,
+            dueDate: new Date(issue.dueDate),
+            closeDate: new Date(issue.closeDate),
+            projectId: issue.projectId,
+          },
+        });
+        return res.json(new DefaultResponse(200, "Ok", updateIssue));
+      } catch (error) {
+        return res.json(new DefaultResponse(500, error.message, error));
+      }
+    }
   }
 }

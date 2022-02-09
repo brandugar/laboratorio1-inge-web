@@ -5,20 +5,20 @@
 //const prisma = new PrismaClient();
 
 export class ProjectController {
-  static GetAll(res) {
+  static GetAll(req, res) {
     //const enterprises = await prisma.issue.findMany({});
     return res.json({ projects: "Projects list" });
   }
 
-  static Get(req, res, next) {
+  static Get(req, res) {
     //TODO: Implementacion
   }
 
-  static Store(req, res, next) {
+  static Store(req, res) {
     //TODO: Implementacion
   }
 
-  static Update(req, res, next) {
+  static Update(req, res) {
     //TODO: Implementacion
   }
 }

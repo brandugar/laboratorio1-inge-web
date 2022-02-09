@@ -11,11 +11,40 @@ export class EnterpriseController {
     return res.json({ enterprises: enterprises });
   }
 
-  static Get(req, res, next) {
-    //TODO: Implementacion
+  static async Get(req, res) {
+    const id = String(req.params.id);
+
+    if (!id) {
+      return res
+        .status(400)
+        .json(new DefaultResponse(400, "Parametro Id requerido", null));
+    } else {
+      const enterprise = await prisma.enterprise.findUnique({
+        where: {
+          id: id,
+        },
+      });
+
+      if (!enterprise) {
+        return res
+          .status(400)
+          .json(new DefaultResponse(400, "Registro no encontrado", enterprise));
+      }
+
+      return res.status(200).json(new DefaultResponse(200, "Ok", enterprise));
+    }
   }
 
   static async Store(req, res) {
+    /* Request example
+
+{
+    "enterprise":{
+        "name" : "Lab1"
+    }
+}
+
+    */
     try {
       if (res?.body?.enterprise) {
         return res.json(
@@ -33,7 +62,26 @@ export class EnterpriseController {
     }
   }
 
-  static Update(req, res, next) {
-    //TODO: Implementacion
+  static async Update(req, res) {
+    const id = String(req.params.id);
+
+    if (!id) {
+      return res
+        .status(400)
+        .json(new DefaultResponse(400, "Parametro Id requerido", null));
+    } else {
+      try {
+        const enterprise = req.body.enterprise;
+        const updateEnterprise = await prisma.enterprise.update({
+          where: {
+            id: id,
+          },
+          data: enterprise,
+        });
+        return res.json(new DefaultResponse(200, "Ok", updateEnterprise));
+      } catch (error) {
+        return res.json(new DefaultResponse(500, error.message, error));
+      }
+    }
   }
 }
