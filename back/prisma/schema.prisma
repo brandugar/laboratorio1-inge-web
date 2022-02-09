@@ -46,7 +46,8 @@ enum Enum_Role {
 model User {
   id           String         @id @default(cuid())
   email        String         @unique
-  enterprise   Enterprise     @relation(fields: [id], references: [id])
+  enterpriseId String
+  enterprise   Enterprise     @relation(fields: [enterpriseId], references: [id])
   role         Enum_Role
   comments     IssueComment[] @relation("UserComments")
   projectDev   Project[]
