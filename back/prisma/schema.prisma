@@ -78,7 +78,7 @@ enum Enum_IssueStatus {
 }
 
 model Issue {
-  id           String             @unique
+  id           String              @id @default(cuid())
   description  String
   category     Enum_IssueType
   priority     Enum_IssuePriority

@@ -1,24 +1,49 @@
-//import pkg from "@prisma/client";
+import pkg from "@prisma/client";
+import DefaultResponse from "../Models/DefaultResponse.js";
 
-//const { PrismaClient } = pkg;
+const { PrismaClient } = pkg;
 
-//const prisma = new PrismaClient();
+const prisma = new PrismaClient();
 
 export class IssueCommentController {
-  static GetAll(res) {
-    //const enterprises = await prisma.issue.findMany({});
-    return res.json({ issues: "Issues list" });
+  static async GetAll(res) {
+    const issueComments = await prisma.issueComment.findMany({});
+    return res.json({ issues: issueComments });
   }
 
-  static Get(req, res, next) {
+  static Get(req, res) {
     //TODO: Implementacion
   }
 
-  static Store(req, res, next) {
-    //TODO: Implementacion
+  static async Store(req, res) {
+    /* Request example
+{
+    "issueComment": {
+        "comment": "",
+        "userId": "1",
+        "issueId": "1"
+    }
+}
+    */
+
+    try {
+      if (res?.body?.issueComment) {
+        return res.json(
+          new DefaultResponse(400, "La informacion proporcionada no es valida")
+        );
+      }
+      const issueComment = req.body.issueComment;
+      const prismaResponse = await prisma.issueComment.create({
+        data: issueComment,
+      });
+
+      return res.json(new DefaultResponse(200, "Ok", prismaResponse));
+    } catch (error) {
+      return res.json(new DefaultResponse(500, error.message, error));
+    }
   }
 
-  static Update(req, res, next) {
+  static Update(req, res) {
     //TODO: Implementacion
   }
 }
