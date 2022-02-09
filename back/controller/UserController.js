@@ -5,14 +5,12 @@ const { PrismaClient } = pkg;
 const prisma = new PrismaClient();
 
 export class UserController {
-  static async GetAll() {
+  static async GetAll(res) {
     const users = await prisma.user.findMany({});
-    return (req, res, next) => {
-      res.json({ users: users });
-    };
+    return res.json({ users: users });
   }
 
-  static async Get(req, res, next) {
+  static async Get(req, res) {
     const id = String(req.params.id);
 
     if (!id) {
@@ -28,13 +26,11 @@ export class UserController {
 
       if (!user) {
         return res
-        .status(400)
-        .json(new DefaultResponse(400, "Registro no encontrado", user));
+          .status(400)
+          .json(new DefaultResponse(400, "Registro no encontrado", user));
       }
 
-      return res
-        .status(200)
-        .json(new DefaultResponse(200, "Ok", user));
+      return res.status(200).json(new DefaultResponse(200, "Ok", user));
     }
   }
 

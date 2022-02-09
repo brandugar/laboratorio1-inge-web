@@ -6,11 +6,9 @@ const { PrismaClient } = pkg;
 const prisma = new PrismaClient(); //TODO: Validar si se puede utilizar una instacia unica y no instanciar por cada peticion.
 
 export class EnterpriseController {
-  static async GetAll() {
+  static async GetAll(req, res) {
     const enterprises = await prisma.enterprise.findMany({});
-    return (req, res, next) => {
-      res.json({ enterprises: enterprises });
-    };
+    return res.json({ enterprises: enterprises });
   }
 
   static Get(req, res, next) {
@@ -19,6 +17,11 @@ export class EnterpriseController {
 
   static async Store(req, res) {
     try {
+      if (res?.body?.enterprise) {
+        return res.json(
+          new DefaultResponse(400, "La informacion proporcionada no es valida")
+        );
+      }
       const enterprise = req.body.enterprise;
       const prismaResponse = await prisma.enterprise.create({
         data: enterprise,
@@ -26,7 +29,6 @@ export class EnterpriseController {
 
       return res.json(new DefaultResponse(200, "Ok", prismaResponse));
     } catch (error) {
-     
       return res.json(new DefaultResponse(500, error.message, error));
     }
   }

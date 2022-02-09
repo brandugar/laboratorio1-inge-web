@@ -5,17 +5,14 @@
 //const prisma = new PrismaClient();
 
 export class IssueController {
-  static GetAll() {
+  static GetAll(res) {
     //const enterprises = await prisma.issue.findMany({});
-    return (req, res, next) => {
-      res.json({ issues: "Issues list" });
-    };
+    return res.json({ issues: "Issues list" });
   }
 
   static Get(req, res, next) {
     //TODO: Implementacion
   }
-
 
   static Store(req, res, next) {
     //TODO: Implementacion

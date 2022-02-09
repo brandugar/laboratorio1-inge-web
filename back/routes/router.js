@@ -6,17 +6,17 @@ import { IssueController } from "../controller/IssueController.js";
 
 const router = express.Router();
 
-router.get("/enterprise", await EnterpriseController.GetAll());
-router.get("/project", await ProjectController.GetAll());
-router.get("/user", await UserController.GetAll());
-router.get("/issue", await IssueController.GetAll());
+router.get("/enterprise", (req, res) =>  EnterpriseController.GetAll(req, res));
+router.get("/project", (req, res) =>  ProjectController.GetAll(req, res));
+router.get("/user", (req, res) =>  UserController.GetAll(req, res));
+router.get("/issue", (req, res) => IssueController.GetAll(req, res));
 
-//router.get("/enterprise/:id", (req, res, next) => EnterpriseController.Get(req, res, next));
-//router.get("/project/:id", (req, res, next) => ProjectController.Get(req, res, next));
-router.get("/user/:id", (req, res, next) => UserController.Get(req, res, next));
-//router.get("/issue/:id", (req, res, next) => IssueController.Get(req, res, next));
+//router.get("/enterprise/:id", (req, res) => EnterpriseController.Get(req, res));
+//router.get("/project/:id", (req, res) => ProjectController.Get(req, res));
+router.get("/user/:id", (req, res) => UserController.Get(req, res));
+//router.get("/issue/:id", (req, res) => IssueController.Get(req, res));
 
 
-router.post("/enterprise", async (req) => await EnterpriseController.Store(req));
+router.post("/enterprise", (req, res) => EnterpriseController.Store(req, res));
 
 export { router };
