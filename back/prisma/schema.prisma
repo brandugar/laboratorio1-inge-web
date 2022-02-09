@@ -48,7 +48,6 @@ model User {
   email        String         @unique
   enterprise   Enterprise     @relation(fields: [id], references: [id])
   role         Enum_Role
-  commentId    String
   comments     IssueComment[] @relation("UserComments")
   projectDev   Project[]
   projectClt   Project[]      @relation("Clients")

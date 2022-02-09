@@ -15,4 +15,8 @@ router.get("/issue", await IssueController.GetAll());
 //router.get("/project/:id", (req, res, next) => ProjectController.Get(req, res, next));
 router.get("/user/:id", (req, res, next) => UserController.Get(req, res, next));
 //router.get("/issue/:id", (req, res, next) => IssueController.Get(req, res, next));
+
+
+router.post("/enterprise", async (req) => await EnterpriseController.Store(req));
+
 export { router };
