@@ -10,19 +10,31 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model IssueComment {
+  id        String @unique
+  comment   String
+  userId    String
+  createdBy User   @relation("UserComments", fields: [userId], references: [id])
+  issueId   String
+  issue     Issue  @relation("IssueComments", fields: [issueId], references: [id])
+}
+
 model Project {
-  id        String      @unique
-  name      String
-  description  String
+  id                 String     @unique
+  name               String
+  description        String
   clientEnterpriseId String
-  clientEnterprise Enterprise @relation(fields: [clientEnterpriseId], references: [id])
+  clientEnterprise   Enterprise @relation(fields: [clientEnterpriseId], references: [id])
+  developers         User[]     @relation("ProjectUsers")
+  clients            User[]     @relation("ProjectClients")
+  Issue              Issue[]    @relation("ProjectIssue")
 }
 
 model Enterprise {
-  id        String      @unique
-  name      String
-  projects  Project[]
-  users     User[]
+  id       String    @unique
+  name     String
+  projects Project[]
+  users    User[]
 }
 
 enum Enum_Role {
@@ -32,8 +44,53 @@ enum Enum_Role {
 }
 
 model User {
-  id        String      @unique
-  email     String   @unique
-  enterprise Enterprise @relation(fields: [id], references: [id])
-  role      Enum_Role
+  id           String         @unique
+  email        String         @unique
+  enterprise   Enterprise     @relation(fields: [id], references: [id])
+  role         Enum_Role
+  commentId    String
+  comments     IssueComment[] @relation("UserComments")
+  projectDevId String
+  projectCltId String
+  projectDev   Project        @relation("ProjectUsers", fields: [projectDevId], references: [id])
+  projectClt   Project        @relation("ProjectClients", fields: [projectCltId], references: [id])
+  Issue        Issue[]        @relation("UserIssue")
+}
+
+enum Enum_IssueType {
+  MissingTask
+  Bug
+  Additional
+}
+
+enum Enum_IssuePriority {
+  Low
+  Medium
+  High
+}
+
+enum Enum_IssueStatus {
+  NotAssigned
+  Assigned
+  Estimated
+  InternalValidation
+  ClientValidation
+  Closed
+  Abandoned
+}
+
+model Issue {
+  id           String             @unique
+  description  String
+  category     Enum_IssueType
+  priority     Enum_IssuePriority
+  status       Enum_IssueStatus
+  hourEstimate Int
+  userId       String
+  developer    User               @relation("UserIssue", fields: [userId], references: [id])
+  comments     IssueComment[]     @relation("IssueComments")
+  dueDate      DateTime
+  closeDate    DateTime
+  projectId    String
+  project      Project            @relation("ProjectIssue", fields: [projectId], references: [id])
 }

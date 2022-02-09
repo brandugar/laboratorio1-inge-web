@@ -16,7 +16,6 @@ export class EnterpriseController {
     //TODO: Implementacion
   }
 
-
   static Store(req, res, next) {
     //TODO: Implementacion
   }
