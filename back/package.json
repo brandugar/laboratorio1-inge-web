@@ -1,21 +1,29 @@
 {
-  "name": "back-ventas",
+  "name": "software-tracking",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@prisma/client": "^3.9.1",
+    "@prisma/client": "^3.9.2",
     "cors": "^2.8.5",
-    "express": "^4.17.2"
+    "express": "^4.17.2",
+    "nodemon": "^2.0.15",
+    "prisma": "^3.9.1"
+  },
+  "engines": {
+    "node": "16.13.1"
   },
   "type": "module",
   "devDependencies": {
+    "@prisma/client": "^3.9.2",
     "nodemon": "^2.0.15",
-    "prisma": "^3.9.1",
-    "@prisma/client": "^3.9.1"
+    "prisma": "^3.9.1"
   },
   "scripts": {
+    "start": "nodemon index.js",
     "dev": "nodemon index.js",
     "postinstall": "prisma generate"
-  }
+  },
+  "repository": "https://github.com/carmc99/SoftwareTrackingBackend.git",
+  "author": "Carlos <carmc99@gmail.com>"
 }
