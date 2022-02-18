@@ -6,12 +6,12 @@ const { PrismaClient } = pkg;
 const prisma = new PrismaClient();
 
 export class ProjectController {
-  static GetAll(req, res) {
+  static async GetAll(req, res) {
     const projects = await prisma.project.findMany({});
     return res.json({ projects: projects });
   }
 
-  static Get(req, res) {
+  static async Get(req, res) {
     const id = String(req.params.id);
 
     if (!id) {
@@ -35,7 +35,7 @@ export class ProjectController {
     }
   }
 
-  static Store(req, res) {
+  static async Store(req, res) {
     /* Request example
 {
     "project": {
@@ -64,7 +64,7 @@ export class ProjectController {
     }
   }
 
-  static Update(req, res) {
+  static async Update(req, res) {
     const id = String(req.params.id);
 
     if (!id) {

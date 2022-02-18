@@ -34,13 +34,13 @@ export class UserController {
     }
   }
 
-  static Store(req, res) {
+  static async Store(req, res) {
     /* Request example
 {
     "user": {
         "id": "as",
         "email": "name",
-        "role": "Lorem asd",
+        "role": "Administrador",
         "enterpriseId": "123"
     }
 }
@@ -62,7 +62,7 @@ export class UserController {
     }
   }
 
-  static Update(req, res) {
+  static async Update(req, res) {
     const id = String(req.params.id);
 
     if (!id) {
