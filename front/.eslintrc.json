@@ -14,13 +14,21 @@
   "plugins": ["react", "prettier"],
   "rules": {
     "no-restricted-imports": [
-      "error",
+      "off",
       {
         "patterns": [".*"]
       }
     ],
+    "import/extensions": [
+      "error",
+      {
+        "js": "ignorePackages"
+      }
+    ],
     "prefer-destructuring": "warn",
-    "react/jsx-filename-extension": [1, { "extensions": [".jsx", ".js"] }],
+    "react/jsx-filename-extension": [1, {
+      "extensions": [".jsx", ".js"]
+    }],
     "react/prop-types": "off",
     "react/react-in-jsx-scope": "off",
     "react/require-default-props": "off",
@@ -39,7 +47,7 @@
         "endOfLine": "auto"
       }
     ],
-    "no-console": "error",
+    "no-console": "off",
     "jsx-a11y/anchor-is-valid": [
       "error",
       {
