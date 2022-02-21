@@ -13,26 +13,31 @@ export class EnterpriseController {
   }
 
   static async Get(req, res) {
-    const id = String(req.params.id);
+    try {
+      const id = String(req.params.id);
 
-    if (!id) {
-      return res
-        .status(400)
-        .json(new DefaultResponse(400, "Parametro Id requerido", null));
-    } else {
-      const enterprise = await prisma.enterprise.findUnique({
-        where: {
-          id: id,
-        },
-      });
-
-      if (!enterprise) {
+      if (!id) {
         return res
           .status(400)
-          .json(new DefaultResponse(400, "Registro no encontrado", enterprise));
-      }
+          .json(new DefaultResponse(400, "Parametro Id requerido", null));
+      } else {
+        const enterprise = await prisma.enterprise.findUnique({
+          where: {
+            id: id,
+          },
+        });
 
+        if (!enterprise) {
+          return res
+            .status(400)
+            .json(
+              new DefaultResponse(400, "Registro no encontrado", enterprise)
+            );
+        }
+      }
       return res.status(200).json(new DefaultResponse(200, "Ok", enterprise));
+    } catch (error) {
+      return res.json(new DefaultResponse(500, error.message, error));
     }
   }
 

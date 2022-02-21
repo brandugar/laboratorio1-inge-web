@@ -6,32 +6,51 @@ const { PrismaClient } = pkg;
 const prisma = new PrismaClient();
 
 export class IssueCommentController {
-  static async GetAll(req, res) {
-    const issueComments = await prisma.issueComment.findMany({});
-    return res.json({ issues: issueComments });
+  static async GetAll(req, res){
+    const comments = await prisma.issueComment.findMany({});
+    return res.json({ comments: comments });
+  }
+  
+  static async GetByIssue(req, res) {
+    try {
+      const id = String(req.params.id);
+      const issueComments = await prisma.issueComment.findMany({
+        where: {
+          issueId: id,
+        },
+      });
+      
+      return res.json({ issues: issueComments });
+    } catch (error) {
+      return res.json(new DefaultResponse(500, error.message, error));
+    }
   }
 
   static async Get(req, res) {
-    const id = String(req.params.id);
+    try {
+      const id = String(req.params.id);
 
-    if (!id) {
-      return res
-        .status(400)
-        .json(new DefaultResponse(400, "Parametro Id requerido", null));
-    } else {
-      const comment = await prisma.issueComment.findUnique({
-        where: {
-          id: id,
-        },
-      });
-
-      if (!comment) {
+      if (!id) {
         return res
           .status(400)
-          .json(new DefaultResponse(400, "Registro no encontrado", comment));
-      }
+          .json(new DefaultResponse(400, "Parametro Id requerido", null));
+      } else {
+        const comment = await prisma.issueComment.findUnique({
+          where: {
+            id: id,
+          },
+        });
 
-      return res.status(200).json(new DefaultResponse(200, "Ok", comment));
+        if (!comment) {
+          return res
+            .status(400)
+            .json(new DefaultResponse(400, "Registro no encontrado", comment));
+        }
+
+        return res.status(200).json(new DefaultResponse(200, "Ok", comment));
+      }
+    } catch (error) {
+      return res.json(new DefaultResponse(500, error.message, error));
     }
   }
 

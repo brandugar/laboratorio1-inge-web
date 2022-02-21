@@ -11,29 +11,35 @@ export class HomeController {
             update: "/enterprise/:id",
           },
           user: {
+            auth: "/auth",
             all: "/user",
             get: "/user/:id",
             store: "/user",
             update: "/user/:id",
+            byEnterpriseId: "/enterprise/:id/users"
           },
           project: {
             all: "/project",
             get: "/project/:id",
             store: "/project",
             update: "/project/:id",
+            byEnterpriseId: '/enterprise/:id/projects'
           },
           issue: {
             all: "/issue",
-            get: "issue/:id",
+            get: "/issue/:id",
             store: "/issue",
             update: "/issue/:id",
+            byProjectId: "/project/:id/issues",
+            byUserId: "/user/:id/issues"
           },
           comments: {
             all: "/comment",
-            get: "comment/:id",
+            get: "/comment/:id",
             store: "/comment",
             update: "/comment/:id",
-          },
+            byIssueId: "/issue/:id/comments"
+          }
         },
       },
     });

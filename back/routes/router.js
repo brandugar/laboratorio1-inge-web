@@ -8,12 +8,20 @@ import { HomeController } from "../controller/HomeController.js";
 
 const router = express.Router();
 
+
+
 router.get("/", (req, res) => HomeController.GetAll(req, res));
 router.get("/enterprise", (req, res) => EnterpriseController.GetAll(req, res));
 router.get("/project", (req, res) => ProjectController.GetAll(req, res));
 router.get("/user", (req, res) => UserController.GetAll(req, res));
 router.get("/issue", (req, res) => IssueController.GetAll(req, res));
 router.get("/comment", (req, res) => IssueCommentController.GetAll(req, res));
+
+router.get("/enterprise/:id/projects", (req, res) => ProjectController.GetByEnterprise(req, res));
+router.get("/enterprise/:id/users", (req, res) => UserController.GetByEnterprise(req, res));
+router.get("/project/:id/issues", (req, res) => IssueController.GetByProject(req, res));
+router.get("/issue/:id/comments", (req, res) => IssueCommentController.GetByIssue(req, res));
+router.get("/user/:id/issues", (req, res) => IssueController.GetByUser(req, res));
 
 router.get("/enterprise/:id", (req, res) => EnterpriseController.Get(req, res));
 router.get("/project/:id", (req, res) => ProjectController.Get(req, res));
@@ -26,6 +34,7 @@ router.post("/comment", (req, res) => IssueCommentController.Store(req, res));
 router.post("/issue", (req, res) => IssueController.Store(req, res));
 router.post("/user", (req, res) => UserController.Store(req, res));
 router.post("/project", (req, res) => ProjectController.Store(req, res));
+router.post("/auth", (req, res) => UserController.Auth(req, res));
 
 router.put("/enterprise/:id", (req, res) =>
   EnterpriseController.Update(req, res)

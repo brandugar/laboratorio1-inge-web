@@ -6,32 +6,65 @@ const { PrismaClient } = pkg;
 const prisma = new PrismaClient();
 
 export class IssueController {
-  static async GetAll(req, res) {
+  static async GetAll(req, res){
     const issues = await prisma.issue.findMany({});
     return res.json({ issues: issues });
   }
-
-  static async  Get(req, res) {
-    const id = String(req.params.id);
-
-    if (!id) {
-      return res
-        .status(400)
-        .json(new DefaultResponse(400, "Parametro Id requerido", null));
-    } else {
-      const issue = await prisma.issue.findUnique({
+  
+  static async GetByProject(req, res) {
+    try {
+      const id = String(req.params.id);
+      const issues = await prisma.issue.findMany({
         where: {
-          id: id,
+          projectId: id,
         },
       });
+      
+      return res.json({ issues: issues });
+    } catch (error) {
+      return res.json(new DefaultResponse(500, error.message, error));
+    }
+  }
 
-      if (!issue) {
+  static async GetByUser(req, res) {
+    try {
+      const id = String(req.params.id);
+      const issues = await prisma.issue.findMany({
+        where: {
+          userId: id,
+        },
+      });
+      
+      return res.json({ issues: issues });
+    } catch (error) {
+      return res.json(new DefaultResponse(500, error.message, error));
+    }
+  }
+
+  static async Get(req, res) {
+    try {
+      const id = String(req.params.id);
+      if (!id) {
         return res
           .status(400)
-          .json(new DefaultResponse(400, "Registro no encontrado", issue));
-      }
+          .json(new DefaultResponse(400, "Parametro Id requerido", null));
+      } else {
+        const issue = await prisma.issue.findUnique({
+          where: {
+            id: id,
+          },
+        });
 
-      return res.status(200).json(new DefaultResponse(200, "Ok", issue));
+        if (!issue) {
+          return res
+            .status(400)
+            .json(new DefaultResponse(400, "Registro no encontrado", issue));
+        }
+
+        return res.status(200).json(new DefaultResponse(200, "Ok", issue));
+      }
+    } catch (error) {
+      return res.json(new DefaultResponse(500, error.message, error));
     }
   }
 
@@ -81,8 +114,6 @@ export class IssueController {
 
   static async Update(req, res) {
     const id = String(req.params.id);
-
-    console.log(id)
     if (!id) {
       return res
         .status(400)

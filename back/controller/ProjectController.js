@@ -6,32 +6,51 @@ const { PrismaClient } = pkg;
 const prisma = new PrismaClient();
 
 export class ProjectController {
-  static async GetAll(req, res) {
+  static async GetAll(req, res){
     const projects = await prisma.project.findMany({});
     return res.json({ projects: projects });
   }
 
-  static async Get(req, res) {
-    const id = String(req.params.id);
-
-    if (!id) {
-      return res
-        .status(400)
-        .json(new DefaultResponse(400, "Parametro Id requerido", null));
-    } else {
-      const project = await prisma.project.findUnique({
+  static async GetByEnterprise(req, res) {
+    try {
+      const id = String(req.params.id);
+      const projects = await prisma.project.findMany({
         where: {
-          id: id,
+          clientEnterpriseId: id,
         },
       });
 
-      if (!issue) {
+      return res.json({ projects: projects });
+    } catch (error) {
+      return res.json(new DefaultResponse(500, error.message, error));
+    }
+  }
+
+  static async Get(req, res) {
+    try {
+      const id = String(req.params.id);
+
+      if (!id) {
         return res
           .status(400)
-          .json(new DefaultResponse(400, "Registro no encontrado", project));
-      }
+          .json(new DefaultResponse(400, "Parametro Id requerido", null));
+      } else {
+        const project = await prisma.project.findUnique({
+          where: {
+            id: id,
+          },
+        });
 
-      return res.status(200).json(new DefaultResponse(200, "Ok", issue));
+        if (!project) {
+          return res
+            .status(400)
+            .json(new DefaultResponse(400, "Registro no encontrado", project));
+        }
+
+        return res.status(200).json(new DefaultResponse(200, "Ok", project));
+      }
+    } catch (error) {
+      return res.json(new DefaultResponse(500, error.message, error));
     }
   }
 
