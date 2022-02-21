@@ -72,6 +72,7 @@ export class IssueController {
           projectId: issue.projectId,
         },
       });
+
       return res.json(new DefaultResponse(200, "Ok", prismaResponse));
     } catch (error) {
       return res.json(new DefaultResponse(500, error.message, error));

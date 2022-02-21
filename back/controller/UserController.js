@@ -1,6 +1,5 @@
 import pkg from "@prisma/client";
 import DefaultResponse from "../Models/DefaultResponse.js";
-
 const { PrismaClient } = pkg;
 
 const prisma = new PrismaClient();
@@ -36,33 +35,53 @@ export class UserController {
   }
 
   static async Store(req, res) {
-    console.log(req.body)
+    /* Request example
+{
+    "user": {
+        "id": "as",
+        "email": "name",
+        "role": "Administrador",
+        "enterpriseId": "123"
+    }
+}
+    */
     try {
-      if(res?.body.user){
+      if (res?.body?.user) {
         return res.json(
-          new DefaultResponse(400, "No es posible crear el usuario: informacion no valida")
+          new DefaultResponse(400, "La informacion proporcionada no es valida")
         );
       }
       const user = req.body.user;
       const prismaResponse = await prisma.user.create({
-        data:{
-          email: user.email,
-          enterpriseID: user.enterpriseID,
-          enterprise: user.enterprise,
-          role: user.role,
-          comments: user.comments,
-          projectDev: user.projectDev,
-          projectClt: user.projectClt,
-          issue: user.issue
-        },
+        data: user,
       });
-      return res.json(new DefaultResponse(200, "Ok", prismaResponse))
+
+      return res.json(new DefaultResponse(200, "Ok", prismaResponse));
     } catch (error) {
       return res.json(new DefaultResponse(500, error.message, error));
     }
   }
 
-  static Update(req, res) {
-    //TODO: Implementacion
+  static async Update(req, res) {
+    const id = String(req.params.id);
+
+    if (!id) {
+      return res
+        .status(400)
+        .json(new DefaultResponse(400, "Parametro Id requerido", null));
+    } else {
+      try {
+        const user = req.body.user;
+        const updateUser = await prisma.user.update({
+          where: {
+            id: id,
+          },
+          data: user,
+        });
+        return res.json(new DefaultResponse(200, "Ok", updateUser));
+      } catch (error) {
+        return res.json(new DefaultResponse(500, error.message, error));
+      }
+    }
   }
 }

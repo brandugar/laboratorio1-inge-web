@@ -1,4 +1,5 @@
 import pkg from "@prisma/client";
+//import pkg from '../node_modules/.prisma/client/index';
 import DefaultResponse from "../Models/DefaultResponse.js";
 
 const { PrismaClient } = pkg;
